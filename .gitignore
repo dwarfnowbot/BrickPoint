@@ -2,3 +2,4 @@
 image-search/
 node_modules/
 *.log
+scripts/dbg-*.mjs
