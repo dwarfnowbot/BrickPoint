@@ -1,0 +1,100 @@
+{
+  "content": [
+    {
+      "id": "zbp0000",
+      "elType": "section",
+      "settings": {
+        "layout": "boxed",
+        "padding": {
+          "unit": "px",
+          "top": "0",
+          "right": "20",
+          "bottom": "0",
+          "left": "20",
+          "isLinked": false
+        },
+        "background_background": "classic",
+        "background_color": "#141210"
+      },
+      "elements": [
+        {
+          "id": "10bp000",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null
+          },
+          "elements": [
+            {
+              "id": "ybp0000",
+              "elType": "widget",
+              "widgetType": "bp-archive-head",
+              "settings": {
+                "show_filters": "yes",
+                "filter_taxonomy": "bp_video_category"
+              },
+              "elements": []
+            }
+          ],
+          "isInner": false
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "12bp000",
+      "elType": "section",
+      "settings": {
+        "layout": "boxed",
+        "padding": {
+          "unit": "px",
+          "top": "56",
+          "right": "20",
+          "bottom": "56",
+          "left": "20",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "13bp000",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null
+          },
+          "elements": [
+            {
+              "id": "11bp000",
+              "elType": "widget",
+              "widgetType": "bp-video-grid",
+              "settings": {
+                "source": "archive",
+                "show_heading": "no",
+                "show_pagination": "yes",
+                "show_all_btn": "no"
+              },
+              "elements": []
+            }
+          ],
+          "isInner": false
+        }
+      ],
+      "isInner": false
+    }
+  ],
+  "page_settings": {},
+  "version": "0.4",
+  "title": "BrickPoint Videos Archive",
+  "type": "page",
+  "bp_name": "video-archive",
+  "bp_type": "archive",
+  "bp_condition": [
+    {
+      "type": "include",
+      "name": "archive",
+      "sub_name": "bp_video_archive"
+    }
+  ],
+  "bp_location": "archive"
+}

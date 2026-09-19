@@ -1,0 +1,54 @@
+{
+  "content": [
+    {
+      "id": "2bbp000",
+      "elType": "section",
+      "settings": {
+        "layout": "boxed",
+        "padding": {
+          "unit": "px",
+          "top": "0",
+          "right": "20",
+          "bottom": "0",
+          "left": "20",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "2cbp000",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null
+          },
+          "elements": [
+            {
+              "id": "2abp000",
+              "elType": "widget",
+              "widgetType": "bp-post-single",
+              "settings": {},
+              "elements": []
+            }
+          ],
+          "isInner": false
+        }
+      ],
+      "isInner": false
+    }
+  ],
+  "page_settings": {},
+  "version": "0.4",
+  "title": "BrickPoint Single Post",
+  "type": "page",
+  "bp_name": "post-single",
+  "bp_type": "single",
+  "bp_condition": [
+    {
+      "type": "include",
+      "name": "singular",
+      "sub_name": "post"
+    }
+  ],
+  "bp_location": "single"
+}

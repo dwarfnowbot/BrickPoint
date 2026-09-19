@@ -1,0 +1,54 @@
+{
+  "content": [
+    {
+      "id": "1zbp000",
+      "elType": "section",
+      "settings": {
+        "layout": "boxed",
+        "padding": {
+          "unit": "px",
+          "top": "0",
+          "right": "20",
+          "bottom": "0",
+          "left": "20",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "20bp000",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null
+          },
+          "elements": [
+            {
+              "id": "1ybp000",
+              "elType": "widget",
+              "widgetType": "bp-product-single",
+              "settings": {},
+              "elements": []
+            }
+          ],
+          "isInner": false
+        }
+      ],
+      "isInner": false
+    }
+  ],
+  "page_settings": {},
+  "version": "0.4",
+  "title": "BrickPoint Single Product",
+  "type": "page",
+  "bp_name": "product-single",
+  "bp_type": "single",
+  "bp_condition": [
+    {
+      "type": "include",
+      "name": "singular",
+      "sub_name": "bp_product"
+    }
+  ],
+  "bp_location": "single"
+}

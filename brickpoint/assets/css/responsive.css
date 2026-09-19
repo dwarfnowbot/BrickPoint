@@ -1,0 +1,30 @@
+/* BrickPoint — responsive layer (LM Arena breakpoints preserved) */
+
+@media(max-width:1024px){
+  .cols-4{grid-template-columns:repeat(3,1fr)}
+  .bp-hero-grid{grid-template-columns:1fr}
+  .bp-product-layout{grid-template-columns:1fr}
+  .bp-contact-grid{grid-template-columns:1fr}
+  .bp-footer-grid{grid-template-columns:1fr 1fr}
+  .bp-stats{grid-template-columns:repeat(2,1fr)}
+  .bp-cta{padding:2rem}
+}
+
+@media(max-width:820px){
+  .bp-nav,.bp-header-cta{display:none}
+  .bp-menu-toggle{display:grid;place-items:center;margin-left:auto}
+  .cols-3,.cols-4{grid-template-columns:repeat(2,1fr)}
+  .bp-product-cta{grid-template-columns:1fr}
+  .bp-pagehead{padding:2.4rem 0}
+}
+
+@media(max-width:480px){
+  .cols-3,.cols-4{grid-template-columns:1fr}
+  .cols-2{grid-template-columns:1fr}
+  .bp-footer-grid{grid-template-columns:1fr}
+  .bp-section{padding:2.5rem 0}
+  .bp-topbar-units{display:none}
+  .bp-hero{padding:3rem 0}
+  .bp-cta{flex-direction:column;align-items:flex-start}
+  .bp-stats{grid-template-columns:1fr 1fr}
+}

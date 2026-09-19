@@ -1,0 +1,99 @@
+{
+  "content": [
+    {
+      "id": "1bbp000",
+      "elType": "section",
+      "settings": {
+        "layout": "boxed",
+        "padding": {
+          "unit": "px",
+          "top": "0",
+          "right": "20",
+          "bottom": "0",
+          "left": "20",
+          "isLinked": false
+        },
+        "background_background": "classic",
+        "background_color": "#141210"
+      },
+      "elements": [
+        {
+          "id": "1cbp000",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null
+          },
+          "elements": [
+            {
+              "id": "1abp000",
+              "elType": "widget",
+              "widgetType": "bp-archive-head",
+              "settings": {
+                "show_filters": "yes",
+                "filter_taxonomy": "bp_project_category"
+              },
+              "elements": []
+            }
+          ],
+          "isInner": false
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "1ebp000",
+      "elType": "section",
+      "settings": {
+        "layout": "boxed",
+        "padding": {
+          "unit": "px",
+          "top": "56",
+          "right": "20",
+          "bottom": "56",
+          "left": "20",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "1fbp000",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null
+          },
+          "elements": [
+            {
+              "id": "1dbp000",
+              "elType": "widget",
+              "widgetType": "bp-project-grid",
+              "settings": {
+                "source": "archive",
+                "show_heading": "no",
+                "show_pagination": "yes"
+              },
+              "elements": []
+            }
+          ],
+          "isInner": false
+        }
+      ],
+      "isInner": false
+    }
+  ],
+  "page_settings": {},
+  "version": "0.4",
+  "title": "BrickPoint Projects Archive",
+  "type": "page",
+  "bp_name": "project-archive",
+  "bp_type": "archive",
+  "bp_condition": [
+    {
+      "type": "include",
+      "name": "archive",
+      "sub_name": "bp_project_archive"
+    }
+  ],
+  "bp_location": "archive"
+}

@@ -1,0 +1,21 @@
+/*
+Theme Name: BrickPoint
+Theme URI: https://brickpoint.pk/
+Author: BrickPoint
+Author URI: https://brickpoint.pk/
+Description: Premium construction-materials theme for BrickPoint. Custom Products (bp_product), Videos (bp_video), Projects (bp_project) and Locations (bp_location) post types, WhatsApp inquiry system, full Elementor Pro Theme Builder integration (header, footer, archives, singles) and a one-click demo importer that recreates the complete BrickPoint website. No WooCommerce required.
+Version: 2.0.0
+Requires at least: 6.0
+Tested up to: 6.7
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: brickpoint
+Tags: construction, bricks, business, responsive, custom-colors, custom-logo, featured-images, threaded-comments, translation-ready
+*/
+
+/*
+BrickPoint — LM Arena design system.
+The visual design tokens below mirror the original LM Arena website exactly.
+Do not change tokens when converting layouts; only extend components.
+*/

@@ -1,0 +1,17 @@
+/* BrickPoint — animations (LM Arena design: SS7 approach + float + reveal) */
+
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s,transform .7s}
+.reveal.visible{opacity:1;transform:none}
+
+@keyframes ss7-approach{0%{transform:scale(.72) translateY(46px);filter:brightness(.72);opacity:.55}55%{transform:scale(.94) translateY(8px);opacity:.95}100%{transform:scale(1);opacity:1}}
+.ss7-brick{transform-origin:center;animation:ss7-approach 2.6s cubic-bezier(.22,.61,.36,1) both;background:#1c1a17;border:1px solid rgba(255,255,255,.12);border-radius:1rem;padding:1rem 1.4rem;display:flex;gap:.8rem;align-items:center;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+.ss7-brick strong{font-family:Archivo;font-size:1.6rem;color:#fbbf24}
+.ss7-brick span{color:rgba(255,255,255,.85);font-weight:600;font-size:.9rem}
+
+@keyframes bp-float{0%,100%{transform:translateY(-8px)}50%{transform:translateY(10px)}}
+.bp-ss7-float{margin-top:1rem;animation:bp-float 6s ease-in-out 2.6s infinite}
+
+@media(prefers-reduced-motion:reduce){
+  .ss7-brick,.bp-ss7-float{animation:none!important}
+  .reveal{opacity:1;transform:none;transition:none}
+}

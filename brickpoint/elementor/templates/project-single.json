@@ -1,0 +1,54 @@
+{
+  "content": [
+    {
+      "id": "25bp000",
+      "elType": "section",
+      "settings": {
+        "layout": "boxed",
+        "padding": {
+          "unit": "px",
+          "top": "0",
+          "right": "20",
+          "bottom": "0",
+          "left": "20",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "26bp000",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null
+          },
+          "elements": [
+            {
+              "id": "24bp000",
+              "elType": "widget",
+              "widgetType": "bp-project-single",
+              "settings": {},
+              "elements": []
+            }
+          ],
+          "isInner": false
+        }
+      ],
+      "isInner": false
+    }
+  ],
+  "page_settings": {},
+  "version": "0.4",
+  "title": "BrickPoint Single Project",
+  "type": "page",
+  "bp_name": "project-single",
+  "bp_type": "single",
+  "bp_condition": [
+    {
+      "type": "include",
+      "name": "singular",
+      "sub_name": "bp_project"
+    }
+  ],
+  "bp_location": "single"
+}

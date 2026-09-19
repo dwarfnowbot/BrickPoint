@@ -1,0 +1,153 @@
+{
+  "content": [
+    {
+      "id": "qbp0000",
+      "elType": "section",
+      "settings": {
+        "layout": "boxed",
+        "padding": {
+          "unit": "px",
+          "top": "0",
+          "right": "20",
+          "bottom": "0",
+          "left": "20",
+          "isLinked": false
+        },
+        "background_background": "classic",
+        "background_color": "#141210"
+      },
+      "elements": [
+        {
+          "id": "rbp0000",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null
+          },
+          "elements": [
+            {
+              "id": "pbp0000",
+              "elType": "widget",
+              "widgetType": "bp-archive-head",
+              "settings": {
+                "show_filters": "yes",
+                "filter_taxonomy": "bp_product_category"
+              },
+              "elements": []
+            }
+          ],
+          "isInner": false
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "tbp0000",
+      "elType": "section",
+      "settings": {
+        "layout": "boxed",
+        "padding": {
+          "unit": "px",
+          "top": "56",
+          "right": "20",
+          "bottom": "56",
+          "left": "20",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "ubp0000",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null
+          },
+          "elements": [
+            {
+              "id": "sbp0000",
+              "elType": "widget",
+              "widgetType": "bp-product-grid",
+              "settings": {
+                "source": "archive",
+                "show_heading": "no",
+                "show_pagination": "yes",
+                "wa_label": "Order on WhatsApp",
+                "details_label": "Details"
+              },
+              "elements": []
+            }
+          ],
+          "isInner": false
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "wbp0000",
+      "elType": "section",
+      "settings": {
+        "layout": "boxed",
+        "padding": {
+          "unit": "px",
+          "top": "56",
+          "right": "20",
+          "bottom": "56",
+          "left": "20",
+          "isLinked": false
+        },
+        "background_background": "classic",
+        "background_color": "#F6F1EA"
+      },
+      "elements": [
+        {
+          "id": "xbp0000",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null
+          },
+          "elements": [
+            {
+              "id": "vbp0000",
+              "elType": "widget",
+              "widgetType": "bp-cta",
+              "settings": {
+                "title": "Need a bulk quotation?",
+                "text": "Send your material list on WhatsApp — we reply with availability and final pricing the same day.",
+                "btn1_label": "Chat on WhatsApp",
+                "btn1_link": {
+                  "url": "{{wa}}",
+                  "is_external": "yes",
+                  "nofollow": ""
+                },
+                "btn2_label": "All Products",
+                "btn2_link": {
+                  "url": "{{archive:bp_product}}",
+                  "is_external": "",
+                  "nofollow": ""
+                }
+              },
+              "elements": []
+            }
+          ],
+          "isInner": false
+        }
+      ],
+      "isInner": false
+    }
+  ],
+  "page_settings": {},
+  "version": "0.4",
+  "title": "BrickPoint Product Category Archive",
+  "type": "page",
+  "bp_name": "product-category-archive",
+  "bp_type": "archive",
+  "bp_condition": [
+    {
+      "type": "include",
+      "name": "bp_product_category"
+    }
+  ],
+  "bp_location": "archive"
+}

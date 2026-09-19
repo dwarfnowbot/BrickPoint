@@ -1,0 +1,54 @@
+{
+  "content": [
+    {
+      "id": "22bp000",
+      "elType": "section",
+      "settings": {
+        "layout": "boxed",
+        "padding": {
+          "unit": "px",
+          "top": "0",
+          "right": "20",
+          "bottom": "0",
+          "left": "20",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "23bp000",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null
+          },
+          "elements": [
+            {
+              "id": "21bp000",
+              "elType": "widget",
+              "widgetType": "bp-video-single",
+              "settings": {},
+              "elements": []
+            }
+          ],
+          "isInner": false
+        }
+      ],
+      "isInner": false
+    }
+  ],
+  "page_settings": {},
+  "version": "0.4",
+  "title": "BrickPoint Single Video",
+  "type": "page",
+  "bp_name": "video-single",
+  "bp_type": "single",
+  "bp_condition": [
+    {
+      "type": "include",
+      "name": "singular",
+      "sub_name": "bp_video"
+    }
+  ],
+  "bp_location": "single"
+}

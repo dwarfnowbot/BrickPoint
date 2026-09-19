@@ -1,0 +1,218 @@
+{
+  "content": [
+    {
+      "id": "8bp0000",
+      "elType": "section",
+      "settings": {
+        "layout": "boxed",
+        "padding": {
+          "unit": "px",
+          "top": "0",
+          "right": "20",
+          "bottom": "0",
+          "left": "20",
+          "isLinked": false
+        },
+        "background_background": "classic",
+        "background_color": "#141210"
+      },
+      "elements": [
+        {
+          "id": "9bp0000",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null
+          },
+          "elements": [
+            {
+              "id": "7bp0000",
+              "elType": "widget",
+              "widgetType": "bp-hero",
+              "settings": {
+                "kicker": "Masha Allah • Fine Bricks • SS7",
+                "title": "Building Strength. Delivering Quality. Shaping Tomorrow.",
+                "subtitle": "Premium bricks and reliable construction materials for homes, commercial developments, and large-scale building projects.",
+                "btn1_label": "Explore Products",
+                "btn1_link": {
+                  "url": "{{archive:bp_product}}",
+                  "is_external": "",
+                  "nofollow": ""
+                },
+                "btn2_label": "Request a Quote",
+                "btn2_link": {
+                  "url": "{{page:contact}}",
+                  "is_external": "",
+                  "nofollow": ""
+                },
+                "btn3_label": "WhatsApp Us",
+                "btn3_link": {
+                  "url": "{{wa}}",
+                  "is_external": "yes",
+                  "nofollow": ""
+                },
+                "media_type": "video",
+                "video_url": {
+                  "url": "{{video:hero}}",
+                  "id": "{{video_id:hero}}"
+                },
+                "poster_image": {
+                  "url": "{{media:hero}}",
+                  "id": "{{media_id:hero}}"
+                },
+                "show_ss7": "yes",
+                "ss7_text": "Flagship Bricks"
+              },
+              "elements": []
+            }
+          ],
+          "isInner": false
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "bbp0000",
+      "elType": "section",
+      "settings": {
+        "layout": "boxed",
+        "padding": {
+          "unit": "px",
+          "top": "56",
+          "right": "20",
+          "bottom": "56",
+          "left": "20",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "cbp0000",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null
+          },
+          "elements": [
+            {
+              "id": "abp0000",
+              "elType": "widget",
+              "widgetType": "bp-product-categories",
+              "settings": {
+                "count": 8,
+                "show_heading": "yes"
+              },
+              "elements": []
+            }
+          ],
+          "isInner": false
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "ebp0000",
+      "elType": "section",
+      "settings": {
+        "layout": "boxed",
+        "padding": {
+          "unit": "px",
+          "top": "56",
+          "right": "20",
+          "bottom": "56",
+          "left": "20",
+          "isLinked": false
+        },
+        "background_background": "classic",
+        "background_color": "#1C1A17"
+      },
+      "elements": [
+        {
+          "id": "fbp0000",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null
+          },
+          "elements": [
+            {
+              "id": "dbp0000",
+              "elType": "widget",
+              "widgetType": "bp-product-grid",
+              "settings": {
+                "source": "featured",
+                "count": 8,
+                "show_heading": "yes",
+                "eyebrow": "Featured Products",
+                "title": "Materials contractors ask for by name",
+                "wa_label": "Order on WhatsApp",
+                "details_label": "Details",
+                "show_all_btn": "yes",
+                "all_btn_label": "Browse All Products",
+                "all_btn_link": {
+                  "url": "{{archive:bp_product}}",
+                  "is_external": "",
+                  "nofollow": ""
+                }
+              },
+              "elements": []
+            }
+          ],
+          "isInner": false
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "hbp0000",
+      "elType": "section",
+      "settings": {
+        "layout": "boxed",
+        "padding": {
+          "unit": "px",
+          "top": "56",
+          "right": "20",
+          "bottom": "56",
+          "left": "20",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "ibp0000",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null
+          },
+          "elements": [
+            {
+              "id": "gbp0000",
+              "elType": "widget",
+              "widgetType": "bp-video-grid",
+              "settings": {
+                "source": "latest",
+                "count": 3,
+                "show_heading": "yes",
+                "eyebrow": "Inside BrickPoint",
+                "title": "See the Strength Behind Every Brick",
+                "show_all_btn": "yes",
+                "all_btn_label": "View All Videos"
+              },
+              "elements": []
+            }
+          ],
+          "isInner": false
+        }
+      ],
+      "isInner": false
+    }
+  ],
+  "page_settings": {},
+  "version": "0.4",
+  "title": "BrickPoint Homepage",
+  "type": "page",
+  "bp_name": "home",
+  "bp_type": "page",
+  "bp_location": ""
+}

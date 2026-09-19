@@ -1,0 +1,62 @@
+{
+  "content": [
+    {
+      "id": "2kbp000",
+      "elType": "section",
+      "settings": {
+        "layout": "boxed",
+        "padding": {
+          "unit": "px",
+          "top": "56",
+          "right": "20",
+          "bottom": "56",
+          "left": "20",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "2lbp000",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100,
+            "_inline_size": null
+          },
+          "elements": [
+            {
+              "id": "2jbp000",
+              "elType": "widget",
+              "widgetType": "bp-cta",
+              "settings": {
+                "title": "Ready to order bricks for your next project?",
+                "text": "Send your material list on WhatsApp — we reply with availability and final pricing the same day.",
+                "btn1_label": "Chat on WhatsApp",
+                "btn1_link": {
+                  "url": "{{wa}}",
+                  "is_external": "yes",
+                  "nofollow": ""
+                },
+                "btn2_label": "Browse Products",
+                "btn2_link": {
+                  "url": "{{archive:bp_product}}",
+                  "is_external": "",
+                  "nofollow": ""
+                }
+              },
+              "elements": []
+            }
+          ],
+          "isInner": false
+        }
+      ],
+      "isInner": false
+    }
+  ],
+  "page_settings": {},
+  "version": "0.4",
+  "title": "BrickPoint CTA Section",
+  "type": "section",
+  "bp_name": "cta-section",
+  "bp_type": "section",
+  "bp_location": ""
+}
