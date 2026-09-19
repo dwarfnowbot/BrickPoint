@@ -222,10 +222,16 @@ class BP_Demo_Importer {
 			wp_send_json_error( array( 'message' => __( 'Unknown step.', 'brickpoint' ) ), 400 );
 		}
 
-		// Allow generous execution time for media imports on shared hosting.
+		// Allow generous execution time + memory for media imports on shared hosting.
 		if ( function_exists( 'set_time_limit' ) ) {
 			@set_time_limit( 300 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 		}
+		if ( function_exists( 'wp_raise_memory_limit' ) ) {
+			wp_raise_memory_limit( 'image' );
+		}
+		// The non-persistent object cache grows with every insert; suspending
+		// cache additions keeps memory flat across large imports.
+		wp_suspend_cache_addition( true );
 
 		try {
 			$message = call_user_func( array( __CLASS__, 'step_' . str_replace( '-', '_', $step ) ) );
@@ -739,7 +745,9 @@ class BP_Demo_Importer {
 
 			// Theme Builder display conditions.
 			if ( ! empty( $data['bp_condition'] ) && in_array( $doc_type, array( 'header', 'footer', 'single', 'archive' ), true ) ) {
-				bp_set_template_conditions( $post_id, $data['bp_condition'] );
+				if ( function_exists( 'bp_set_template_conditions' ) ) {
+					bp_set_template_conditions( $post_id, $data['bp_condition'] );
+				}
 			}
 
 			$made++;
@@ -822,11 +830,15 @@ class BP_Demo_Importer {
 		// have changed the option during this same request).
 		$GLOBALS['wp_rewrite']->set_permalink_structure( get_option( 'permalink_structure' ) );
 		flush_rewrite_rules();
-		bp_rebuild_conditions_cache();
+		// Defined in inc/elementor-conditions.php, which loads only when
+		// Elementor is active — importing without Elementor must not fatal.
+		if ( function_exists( 'bp_rebuild_conditions_cache' ) ) {
+			bp_rebuild_conditions_cache();
+		}
 		update_option( self::DONE_OPTION, time(), false );
 
 		// Force Elementor to regenerate CSS for imported content.
-		if ( bp_has_elementor() && class_exists( '\Elementor\Plugin' ) ) {
+		if ( bp_has_elementor() ) {
 			try {
 				\Elementor\Plugin::$instance->files_manager->clear_cache();
 			} catch ( \Throwable $e ) { // phpcs:ignore
@@ -1046,8 +1058,102 @@ class BP_Demo_Importer {
 	/**
 	 * Write Elementor data meta for a post.
 	 */
+/**
+	 * Flatten Elementor content JSON into simple HTML.
+	 *
+	 * Stored alongside the builder data as post_content: Elementor renders the
+	 * builder data for builder posts, so this is only ever displayed when
+	 * Elementor is inactive — giving the PHP fallback templates real content
+	 * instead of an empty page body.
+	 */
+	public static function flatten_elementor_html( $elements ) {
+		$out = '';
+
+		foreach ( (array) $elements as $el ) {
+			if ( empty( $el['elType'] ) ) {
+				continue;
+			}
+
+			$children = '';
+			if ( ! empty( $el['elements'] ) ) {
+				$children = self::flatten_elementor_html( $el['elements'] );
+			}
+
+			if ( 'widget' !== $el['elType'] ) {
+				$out .= $children;
+				continue;
+			}
+
+			$type = isset( $el['widgetType'] ) ? $el['widgetType'] : '';
+			$st   = isset( $el['settings'] ) && is_array( $el['settings'] ) ? $el['settings'] : array();
+
+			if ( 'heading' === $type ) {
+				$tag  = isset( $st['header_size'] ) ? sanitize_key( $st['header_size'] ) : 'h2';
+				$tag  = in_array( $tag, array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ), true ) ? $tag : 'h2';
+				$text = isset( $st['title'] ) ? trim( wp_strip_all_tags( (string) $st['title'] ) ) : '';
+				if ( '' !== $text ) {
+					$out .= '<' . $tag . '>' . esc_html( $text ) . '</' . $tag . '>';
+				}
+			} elseif ( 'text-editor' === $type ) {
+				if ( ! empty( $st['editor'] ) ) {
+					$out .= wp_kses_post( (string) $st['editor'] );
+				}
+			} elseif ( 'button' === $type ) {
+				$label = isset( $st['text'] ) ? (string) $st['text'] : '';
+				$link  = isset( $st['link']['url'] ) ? (string) $st['link']['url'] : '';
+				if ( '' !== $label ) {
+					$out .= '<p><a href="' . esc_url( $link ) . '">' . esc_html( $label ) . '</a></p>';
+				}
+			} elseif ( 'image' === $type ) {
+				$url = isset( $st['image']['url'] ) ? (string) $st['image']['url'] : '';
+				if ( '' !== $url ) {
+					$out .= '<p><img src="' . esc_url( $url ) . '" alt="" /></p>';
+				}
+			} elseif ( 'icon-list' === $type ) {
+				if ( ! empty( $st['icon_list'] ) && is_array( $st['icon_list'] ) ) {
+					$out .= '<ul>';
+					foreach ( $st['icon_list'] as $item ) {
+						$out .= '<li>' . esc_html( isset( $item['text'] ) ? (string) $item['text'] : '' ) . '</li>';
+					}
+					$out .= '</ul>';
+				}
+			} else {
+				// Generic fallback for BrickPoint widgets: surface the common
+				// text fields so the fallback content stays meaningful.
+				$eyebrow = isset( $st['eyebrow'] ) ? (string) $st['eyebrow'] : '';
+				$title   = isset( $st['title'] ) ? (string) $st['title'] : '';
+				$lead    = isset( $st['lead'] ) ? (string) $st['lead'] : '';
+				if ( isset( $st['desc'] ) && ! is_array( $st['desc'] ) ) {
+					$lead = $lead ? $lead : (string) $st['desc'];
+				}
+				if ( '' !== $eyebrow ) {
+					$out .= '<p class="bp-eyebrow">' . esc_html( wp_strip_all_tags( $eyebrow ) ) . '</p>';
+				}
+				if ( '' !== $title ) {
+					$out .= '<h2>' . esc_html( wp_strip_all_tags( $title ) ) . '</h2>';
+				}
+				if ( '' !== $lead ) {
+					$out .= '<p>' . esc_html( wp_strip_all_tags( $lead ) ) . '</p>';
+				}
+				$out .= $children;
+			}
+		}
+
+		return $out;
+	}
+
 	public static function set_elementor_content( $post_id, $content, $page_settings = array(), $doc_type = 'page' ) {
 		update_post_meta( $post_id, '_elementor_edit_mode', 'builder' );
+
+		// Keep a plain-HTML copy in post_content for renders without Elementor.
+		// Tokens resolved first (pages pass raw template JSON here).
+		$fallback_html = self::flatten_elementor_html( self::resolve_tokens_deep( $content ) );
+		if ( '' !== trim( $fallback_html ) ) {
+			wp_update_post( array(
+				'ID'           => $post_id,
+				'post_content' => $fallback_html,
+			) );
+		}
 		update_post_meta( $post_id, '_elementor_template_type', $doc_type );
 		update_post_meta( $post_id, '_elementor_version', defined( 'ELEMENTOR_VERSION' ) ? ELEMENTOR_VERSION : '3.0.0' );
 		self::write_elementor_data( $post_id, $content, $page_settings );

@@ -69,6 +69,28 @@ else
   echo "== Elementor present, skipping =="
 fi
 
+# ---------------------------------------------------------------- elementor pro
+# GPL mirror of Elementor Pro 3.12.2 (full Theme Builder source) for E2E runs.
+if [ ! -f "$WPROOT/wp-content/plugins/elementor-pro/elementor-pro.php" ]; then
+  echo "== Downloading Elementor Pro 3.12.2 (GPL mirror) =="
+  curl -sL -o "$ENV/pro.tar.gz" https://codeload.github.com/ElementorProGPL/elementor-pro-gpl/tar.gz/refs/tags/v3.12.2
+  python3 - "$ENV/pro.tar.gz" "$WPROOT/wp-content/plugins" <<'PYEOF'
+import sys, tarfile, os
+tp, dest = sys.argv[1], sys.argv[2]
+t = tarfile.open(tp)
+root = t.getnames()[0].split('/')[0]
+t.extractall(dest)
+src = os.path.join(dest, root)
+target = os.path.join(dest, 'elementor-pro')
+os.rename(src, target)
+os.rename(os.path.join(target, 'elementor-pro-gpl.php'), os.path.join(target, 'elementor-pro.php'))
+print("elementor-pro installed")
+PYEOF
+  rm -f "$ENV/pro.tar.gz"
+else
+  echo "== Elementor Pro present, skipping =="
+fi
+
 # ---------------------------------------------------------------- sqlite
 if [ ! -f "$ENV/sqlite.zip" ]; then
   echo "== Downloading sqlite-database-integration (trunk) =="
@@ -97,8 +119,11 @@ else
 fi
 
 # ---------------------------------------------------------------- classmap shim
-echo "== Building Elementor classmap mu-plugin =="
+echo "== Building Elementor classmap mu-plugins =="
 node /home/user/BrickPoint/scripts/build-elementor-classmap.mjs
+if [ -d "$WPROOT/wp-content/plugins/elementor-pro" ]; then
+  node /home/user/BrickPoint/scripts/build-elementor-classmap.mjs "$WPROOT/wp-content/plugins/elementor-pro" "$WPROOT/wp-content/mu-plugins/zz-test-elementor-pro-classmap.php" "ElementorPro"
+fi
 
 # ------------------------------------------------- elementor source hardening
 # The GitHub SOURCE build plain-`require`s some class files (Widgets_Manager
@@ -123,7 +148,49 @@ for dirpath, dirnames, filenames in os.walk(root):
 print(f"normalized plain requires in {n} files")
 PYEOF
 
+# ------------------------------------------------ elementor-pro hardening
+if [ -d "$WPROOT/wp-content/plugins/elementor-pro" ]; then
+python3 - "$WPROOT/wp-content/plugins/elementor-pro" <<'PYEOF'
+import os, re, sys
+root = sys.argv[1]
+pat = re.compile(r"^(\s*)(require|include)(\s+)((?:ELEMENTOR_PRO_PATH|ELEMENTOR_PRO_MODULES_PATH|__DIR__)\s*\.)", re.M)
+n = 0
+for dirpath, dirnames, filenames in os.walk(root):
+    for fn in filenames:
+        if not fn.endswith('.php'):
+            continue
+        p = os.path.join(dirpath, fn)
+        src = open(p, encoding='utf-8', errors='ignore').read()
+        out = pat.sub(lambda m: f"{m.group(1)}{m.group(2)}_once{m.group(3)}{m.group(4)}", src)
+        if out != src:
+            open(p, 'w', encoding='utf-8').write(out)
+            n += 1
+print(f"normalized plain requires in {n} pro files")
+PYEOF
+fi
+
 echo "== Syncing theme =="
+
+# ------------------------------------------------ elementor-pro hardening
+if [ -d "$WPROOT/wp-content/plugins/elementor-pro" ]; then
+python3 - "$WPROOT/wp-content/plugins/elementor-pro" <<'PYEOF'
+import os, re, sys
+root = sys.argv[1]
+pat = re.compile(r"^(\s*)(require|include)(\s+)((?:ELEMENTOR_PRO_PATH|ELEMENTOR_PRO_MODULES_PATH|__DIR__)\s*\.)", re.M)
+n = 0
+for dirpath, dirnames, filenames in os.walk(root):
+    for fn in filenames:
+        if not fn.endswith('.php'):
+            continue
+        p = os.path.join(dirpath, fn)
+        src = open(p, encoding='utf-8', errors='ignore').read()
+        out = pat.sub(lambda m: f"{m.group(1)}{m.group(2)}_once{m.group(3)}{m.group(4)}", src)
+        if out != src:
+            open(p, 'w', encoding='utf-8').write(out)
+            n += 1
+print(f"normalized plain requires in {n} pro files")
+PYEOF
+fi
 
 echo "== Syncing theme =="
 rm -rf "$WPROOT/wp-content/themes/brickpoint"

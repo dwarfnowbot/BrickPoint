@@ -9,6 +9,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Loaded from functions.php only when Elementor is active; double-guarded
+// here so a direct include can never declare classes that do not exist.
+if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
+	return;
+}
+
 /**
  * Shared helpers for all BrickPoint widgets.
  */

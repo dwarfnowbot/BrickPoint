@@ -14,14 +14,18 @@ if ( ! defined( 'ABSPATH' ) ) {
  * True when Elementor (free) is loaded.
  */
 function bp_has_elementor() {
-	return did_action( 'elementor/loaded' ) || class_exists( '\Elementor\Plugin' );
+	// Constant check, not class_exists(): class_exists() can fire a class
+	// autoloader and load Elementor files outside the plugin bootstrap on
+	// some hosts (fatal). ELEMENTOR_VERSION is defined first thing in the
+	// plugin main file, so this is exact and side-effect free.
+	return defined( 'ELEMENTOR_VERSION' );
 }
 
 /**
  * True when Elementor Pro is loaded.
  */
 function bp_has_elementor_pro() {
-	return class_exists( '\ElementorPro\Plugin' );
+	return defined( 'ELEMENTOR_PRO_VERSION' );
 }
 
 /**

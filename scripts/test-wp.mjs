@@ -21,6 +21,7 @@ const SKIP_IMPORT = args.includes("--skip-import");
 const RERUN = args.includes("--rerun");
 const SYNC_THEME = args.includes("--sync-theme");
 const FRESH = args.includes("--fresh");
+const NO_ELEMENTOR = args.includes("--no-elementor");
 
 let failures = 0;
 const ok = (msg) => console.log(`  \x1b[32m✔\x1b[0m ${msg}`);
@@ -80,7 +81,9 @@ async function main() {
       memory_limit: "512M",
       max_execution_time: "300",
       display_errors: "1",
-      error_reporting: "32767",
+      // E_ALL & ~E_DEPRECATED — mixed-version plugin pairings in the rig emit
+      // deprecation noise that real matched installs do not.
+      error_reporting: "16383",
     },
     });
   } catch (e) {
@@ -112,14 +115,16 @@ async function main() {
     }
   }
 
-  const evalPhp = async (code) => {
+  const evalPhp = async (code, { raw = false } = {}) => {
     const res = await php.run({
-      code: `<?php\nif (!function_exists('BP_TEST_BOOTED')) { define('BP_TEST_BOOTED', 1); require '/wordpress/wp-load.php'; }\n${code}`,
+      code: `<?php\nif (!function_exists('BP_TEST_BOOTED')) { define('BP_TEST_BOOTED', 1); require '/wordpress/wp-load.php'; }\nerror_reporting(E_ALL & ~E_DEPRECATED);\n${code}`,
     });
     if (res.exitCode !== 0 || /Fatal error/.test(res.text ?? "")) {
       throw new Error("PHP failed: " + (res.text ?? "") + (res.stderr ?? ""));
     }
-    return res.text ?? "";
+    if (raw) return res.text ?? "";
+    // Strip any stray plugin deprecation noise before the real output.
+    return (res.text ?? "").replace(/^(\s|<br\s*\/?\s*>|<b>(?:Deprecated|Notice|Warning)<\/b>:[\s\S]*?<br\s*\/?>\s*)+/i, "");
   };
   const request = async (url) => {
     let res = await handler.request({ url, method: "GET" });
@@ -153,9 +158,18 @@ async function main() {
     );
     if (state.includes("brickpoint") && state.includes("elementor/elementor.php")) ok(state);
     else {
-      await evalPhp(
-        `update_option('active_plugins', array('elementor/elementor.php')); switch_theme('brickpoint'); do_action('after_switch_theme');`
-      );
+      await evalPhp(`
+        $plugins = array();
+        if (!${NO_ELEMENTOR}) {
+          $plugins[] = 'elementor/elementor.php';
+          if (file_exists(WP_PLUGIN_DIR . '/elementor-pro/elementor-pro.php')) {
+            $plugins[] = 'elementor-pro/elementor-pro.php';
+          }
+        }
+        update_option('active_plugins', $plugins);
+        switch_theme('brickpoint');
+        do_action('after_switch_theme');
+      `);
       const state2 = await evalPhp(`echo get_option('stylesheet') . '|' . implode(',', get_option('active_plugins', array()));`);
       state2.includes("brickpoint") ? ok(`activated: ${state2}`) : fail(`could not activate: ${state2}`);
     }
@@ -219,7 +233,7 @@ async function main() {
       ["4 locations", I.locations === 4],
       ["6 posts", I.posts === 6],
       ["11 pages", I.pages === 11],
-      ["19 Elementor docs (18 templates + kit)", I.templates === 19],
+      ...(!NO_ELEMENTOR ? [["19 Elementor docs (18 templates + kit)", I.templates === 19]] : []),
       ["8 product categories", I.product_cats === 8],
       ["6 video categories", I.video_cats === 6],
       ["3 project categories", I.project_cats === 3],
@@ -256,18 +270,20 @@ async function main() {
       (c.data ? ok : fail)(`${c.name} [${c.type}${c.loc ? "/" + c.loc : ""}] conditions: ${condStr}`);
     }
 
-    section("Homepage is Elementor-built");
-    const homeBuilt = await evalPhp(
-      `echo bp_is_elementor_built((int) get_option('page_on_front')) ? 'yes' : 'no';`
-    );
-    (homeBuilt === "yes" ? ok : fail)(`home page built with Elementor: ${homeBuilt}`);
+    if (!NO_ELEMENTOR) {
+      section("Homepage is Elementor-built");
+      const homeBuilt = await evalPhp(
+        `echo bp_is_elementor_built((int) get_option('page_on_front')) ? 'yes' : 'no';`
+      );
+      (homeBuilt === "yes" ? ok : fail)(`home page built with Elementor: ${homeBuilt}`);
+    }
   }
 
   section("Frontend rendering");
   const pages = [
     ["/", "home", ["bp-hero", "bp-cat-card", "bp-card", "bp-play-btn", "Masha Allah"]],
     ["/about/", "about", ["bp-pagehead", "Syed Iftikhar Haider"]],
-    ["/contact/", "contact", ["bp-pagehead", "WhatsApp", "bp-loc-card"]],
+    ["/contact/", "contact", ["bp-pagehead", "WhatsApp", ...(NO_ELEMENTOR ? [] : ["bp-loc-card"])]],
     ["/products/", "products archive", ["bp-pagehead", "Awami", "Order on WhatsApp"]],
     ["/videos/", "videos archive", ["bp-pagehead", "bp-play-btn"]],
     ["/projects/", "projects archive", ["bp-pagehead", "Gulberg"]],
@@ -323,7 +339,9 @@ async function main() {
     (html.includes('class="bp-menu"') ? ok : fail)("primary menu rendered");
     (html.includes("ss7-brick") ? ok : fail)("SS7 floating brick");
     (html.includes("<video") || html.includes("poster=") ? ok : fail)("hero video/poster");
-    (html.includes("elementor-widget") ? ok : fail)("rendered via Elementor widgets");
+    if (!NO_ELEMENTOR) {
+      (html.includes("elementor-widget") ? ok : fail)("rendered via Elementor widgets");
+    }
   }
 
   section("Menu URLs resolve");

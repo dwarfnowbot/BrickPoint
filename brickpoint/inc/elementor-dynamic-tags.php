@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Register dynamic tags.
  */
 function bp_register_dynamic_tags( $dynamic_tags_manager ) {
-	if ( ! class_exists( '\Elementor\Core\DynamicTags\Tag' ) && ! class_exists( '\Elementor\Core\DynamicTags\Data_Tag' ) ) {
+	if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
 		return;
 	}
 

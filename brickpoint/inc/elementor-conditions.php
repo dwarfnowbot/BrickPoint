@@ -20,13 +20,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 function bp_register_theme_conditions( $conditions_manager ) {
 	// "Posts Archive" — Pro registers `{post_type}_archive` conditions only for
 	// post types that expose an archive link. The blog page (is_home) needs one.
-	if ( ! $conditions_manager->get_condition( 'post_archive' ) && class_exists( '\ElementorPro\Modules\ThemeBuilder\Conditions\Condition_Base' ) ) {
+	if ( ! $conditions_manager->get_condition( 'post_archive' ) ) {
 		$conditions_manager->register_condition_instance( new BP_Post_Archive_Condition() );
 	}
 }
 add_action( 'elementor/theme/register_conditions', 'bp_register_theme_conditions' );
 
-if ( class_exists( '\ElementorPro\Modules\ThemeBuilder\Conditions\Condition_Base' ) ) {
+if ( defined( 'ELEMENTOR_PRO_VERSION' ) ) {
 
 	/**
 	 * Blog / posts-archive condition.
@@ -82,7 +82,7 @@ function bp_set_template_conditions( $post_id, $conditions ) {
 	}
 
 	// Preferred path: let Elementor Pro handle storage + cache regeneration.
-	if ( bp_has_elementor_pro() && class_exists( '\ElementorPro\Modules\ThemeBuilder\Module' ) ) {
+	if ( bp_has_elementor_pro() ) {
 		try {
 			$module = \ElementorPro\Modules\ThemeBuilder\Module::instance();
 			$module->get_conditions_manager()->save_conditions( $post_id, $conditions );
@@ -142,7 +142,7 @@ function bp_rebuild_conditions_cache() {
 	update_option( 'elementor_pro_theme_builder_conditions', $cache );
 
 	// Also refresh through Pro when available (keeps in-memory copy in sync).
-	if ( bp_has_elementor_pro() && class_exists( '\ElementorPro\Modules\ThemeBuilder\Module' ) ) {
+	if ( bp_has_elementor_pro() ) {
 		try {
 			$module = \ElementorPro\Modules\ThemeBuilder\Module::instance();
 			$module->get_conditions_manager()->get_cache()->refresh();

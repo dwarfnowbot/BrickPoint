@@ -17,11 +17,13 @@ const OUT = process.argv[3] || "/home/user/testenv/wproot/wp-content/mu-plugins/
 const HOST_ROOT = "/home/user/testenv/wproot";
 const VFS_ROOT = "/wordpress";
 
-if (!fs.existsSync(PLUGIN_HOST + "/elementor.php")) {
-	console.error("Elementor source not found at " + PLUGIN_HOST);
+const mainFile = ["elementor.php", "elementor-pro.php"].map((f) => PLUGIN_HOST + "/" + f).find((f) => fs.existsSync(f));
+if (!mainFile) {
+	console.error("Elementor/Elementor Pro source not found at " + PLUGIN_HOST);
 	process.exit(1);
 }
 
+const NS_FILTER = process.argv[4] || "";
 const mapping = {};
 const classRe = /^\s*(?:abstract\s+|final\s+)?(?:class|interface|trait)\s+(\w+)/gm;
 const nsRe = /^\s*namespace\s+([\w\\]+)\s*;/m;
@@ -34,6 +36,7 @@ const nsRe = /^\s*namespace\s+([\w\\]+)\s*;/m;
 			const src = fs.readFileSync(p, "utf8");
 			const ns = src.match(nsRe);
 			const prefix = ns ? ns[1] + "\\" : "";
+			if (NS_FILTER && !prefix.startsWith(NS_FILTER)) continue;
 			let m;
 			classRe.lastIndex = 0;
 			while ((m = classRe.exec(src))) {
@@ -44,6 +47,7 @@ const nsRe = /^\s*namespace\s+([\w\\]+)\s*;/m;
 	}
 })(PLUGIN_HOST);
 
+const fnName = "bp_test_" + (NS_FILTER ? NS_FILTER.replace(/\\/g, "_").toLowerCase() + "_" : "elem_") + "classmap_autoload";
 const lines = [
 	"<?php",
 	"/**",
@@ -52,7 +56,7 @@ const lines = [
 	" * so this shim is never shipped with the theme.",
 	" */",
 	"if ( ! defined( 'ABSPATH' ) ) { exit; }",
-	"function bp_test_elem_classmap_autoload( $class ) {",
+	`function ${fnName}( $class ) {`,
 	"  static $map = null;",
 	"  if ( null === $map ) { $map = array(",
 ];
@@ -67,7 +71,7 @@ lines.push("  if ( isset( $map[ $class ] ) && ! class_exists( $class, false ) ) 
 lines.push("    require $map[ $class ];");
 lines.push("  }");
 lines.push("}");
-lines.push("spl_autoload_register( 'bp_test_elem_classmap_autoload', true, false );", "");
+lines.push(`spl_autoload_register( '${fnName}', true, false );`, "");
 
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 fs.writeFileSync(OUT, lines.join("\n"));

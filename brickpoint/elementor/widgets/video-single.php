@@ -73,7 +73,7 @@ class BrickPoint_Video_Single_Widget extends \Elementor\Widget_Base {
 			<div class="bp-container <?php echo esc_attr( $s['width'] ); ?>">
 				<h1 style="font-family:Archivo;font-size:clamp(1.6rem,3vw,2.2rem)"><?php the_title(); ?></h1>
 				<p class="entry-meta"><?php echo esc_html( get_the_date() ); ?></p>
-				<?php echo wp_kses_post( bp_video_embed_html( $id ) ); ?>
+				<?php echo bp_video_embed_html( $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built with esc_url internally; kses strips <source>. ?>
 				<?php if ( ! bp_video_embed_html( $id ) && has_post_thumbnail() ) : ?>
 					<p><?php the_post_thumbnail( 'bp-video', array( 'class' => 'bp-single-img' ) ); ?></p>
 				<?php endif; ?>
