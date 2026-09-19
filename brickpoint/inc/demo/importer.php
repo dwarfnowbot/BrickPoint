@@ -793,9 +793,11 @@ class BP_Demo_Importer {
 
 	public static function step_theme() {
 		// Permalinks: always the clean post-name structure (Playground and some
-		// hosts preinstall date-based structures).
+		// hosts preinstall date-based structures). set_permalink_structure() is
+		// the official API — it updates the option, the runtime property and
+		// the verbose-page-rules flag so the next flush is correct.
 		if ( '/%postname%/' !== get_option( 'permalink_structure' ) ) {
-			update_option( 'permalink_structure', '/%postname%/' );
+			$GLOBALS['wp_rewrite']->set_permalink_structure( '/%postname%/' );
 		}
 
 		// Theme options: WhatsApp + contact (same values as the LM Arena site).
@@ -816,6 +818,9 @@ class BP_Demo_Importer {
 	}
 
 	public static function step_finalizing() {
+		// Ensure rewrite generation uses the final structure (step_theme may
+		// have changed the option during this same request).
+		$GLOBALS['wp_rewrite']->set_permalink_structure( get_option( 'permalink_structure' ) );
 		flush_rewrite_rules();
 		bp_rebuild_conditions_cache();
 		update_option( self::DONE_OPTION, time(), false );

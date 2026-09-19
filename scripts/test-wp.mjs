@@ -134,6 +134,18 @@ async function main() {
     return { statusCode: res.httpStatusCode, text: res.text, stderr: res.stderr, headers: res.headers, exitCode: res.exitCode };
   };
 
+  // Playground force-writes date-based permalinks after each boot; assert
+  // the demo structure like the importer does on real sites.
+  {
+    const res = await evalPhp(`
+      global $wp_rewrite;
+      $wp_rewrite->set_permalink_structure('/%postname%/');
+      $wp_rewrite->flush_rules(true);
+      echo 'flushed';
+    `);
+    ok("rewrite rules asserted for /%postname%/ (" + res + ")");
+  }
+
   section("Activation state");
   {
     const state = await evalPhp(
